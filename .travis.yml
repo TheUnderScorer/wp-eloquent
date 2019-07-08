@@ -27,10 +27,11 @@ install:
   - docker-compose -f docker-compose.phpunit.yml up -d
   # Fix invalid permissions for bin/install-wp-tests.sh
   - docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit chmod +x bin/install-wp-tests.sh
-
-script:
   # Setup tests suite
   - docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit bin/install-wp-tests.sh wordpress_test root root mysql_test latest true
+
+script:
+  - sudo ls
   - docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit vendor/bin/phpunit
 
 after_script:
