@@ -331,7 +331,7 @@ class Database implements ConnectionInterface
     {
         $result = $this->db->query( $query );
 
-        return ( $result === false || $this->db->last_error );
+        return $result !== false && ! $this->db->last_error;
     }
 
     /**
