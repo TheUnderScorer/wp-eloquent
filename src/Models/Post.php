@@ -49,7 +49,7 @@ class Post extends Model
     use WithMeta, Aliases;
 
     /**
-     *
+     * @var string
      */
     const POST_TYPE = 'post';
 
@@ -398,6 +398,19 @@ class Post extends Model
         $query = parent::query();
 
         return $query;
+    }
+
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        // Combines child and parent aliases
+        if ( ! empty( static::$aliases ) ) {
+            self::$aliases = static::$aliases + self::$aliases;
+        }
+
+        parent::boot();
     }
 
 }

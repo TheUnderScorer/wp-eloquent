@@ -67,11 +67,7 @@ trait Aliases
      */
     public static function getAliases()
     {
-        if ( isset( parent::$aliases ) && count( parent::$aliases ) ) {
-            return array_merge( parent::$aliases, static::$aliases );
-        }
-
-        return static::$aliases;
+        return array_merge( self:: $aliases, static::$aliases, );
     }
 
     /**

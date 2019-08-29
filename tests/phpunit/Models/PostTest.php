@@ -4,6 +4,7 @@ namespace UnderScorer\ORM\Tests\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use UnderScorer\ORM\Models\Attachment;
 use UnderScorer\ORM\Models\Post;
 use UnderScorer\ORM\Models\User;
 use UnderScorer\ORM\Tests\TestCase;
@@ -168,6 +169,8 @@ final class PostTest extends TestCase
      */
     public function testHasRelationToUser(): void
     {
+
+        $a = Attachment::getAliases();
 
         /**
          * @var User $user
