@@ -4,7 +4,6 @@ namespace UnderScorer\ORM\Eloquent;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
-
 /**
  * Class Model
  * @package UnderScorer\ORM\Eloquent

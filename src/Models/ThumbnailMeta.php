@@ -2,7 +2,8 @@
 
 namespace UnderScorer\ORM\Models;
 
-
+use Exception;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Arr;
 
 /**
@@ -39,7 +40,7 @@ class ThumbnailMeta extends PostMeta
     protected $with = [ 'attachment' ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function attachment()
     {
@@ -49,17 +50,18 @@ class ThumbnailMeta extends PostMeta
     /**
      * @param string $size
      *
-     * @return array
-     * @throws \Exception
+     * @return array|string
+     * @throws Exception
      */
     public function size( $size )
     {
         if ( $size == self::SIZE_FULL ) {
             return $this->attachment->url;
         }
+
         $meta  = unserialize( $this->attachment->meta->_wp_attachment_metadata );
-        $sizes = Arr::get( $meta, 'sizes
-        ' );
+        $sizes = Arr::get( $meta, 'sizes' );
+
         if ( ! isset( $sizes[ $size ] ) ) {
             return $this->attachment->url;
         }

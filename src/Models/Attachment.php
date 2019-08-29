@@ -7,9 +7,16 @@ namespace UnderScorer\ORM\Models;
  * @package UnderScorer\ORM\Models
  *
  * @property string alt
+ * @property string url
+ * @property string type
+ * @property string description
+ * @property string caption
+ * @property string altText
  */
 class Attachment extends Post
 {
+
+    const POST_TYPE = 'attachment';
 
     /**
      * @var array
@@ -20,14 +27,8 @@ class Attachment extends Post
         'type'        => 'post_mime_type',
         'description' => 'post_content',
         'caption'     => 'post_excerpt',
-        'alt'         => [ 'meta' => '_wp_attachment_image_alt' ],
+        'altText'     => [ 'meta' => '_wp_attachment_image_alt' ],
     ];
-
-    /**
-     * @var string
-     */
-    protected $postType = 'attachment';
-
     /**
      * @var array
      */
@@ -37,7 +38,7 @@ class Attachment extends Post
         'type',
         'description',
         'caption',
-        'alt',
+        'altText',
     ];
 
 }

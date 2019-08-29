@@ -40,7 +40,6 @@ final class PostTest extends TestCase
 
         // First index, since zero index equals "Uncategorized"
         $this->assertEquals( 'Test category', $categories[ 1 ]->term->name );
-
     }
 
     /**
@@ -64,7 +63,6 @@ final class PostTest extends TestCase
             'This is a test!',
             $meta
         );
-
     }
 
     /**
@@ -97,7 +95,6 @@ final class PostTest extends TestCase
             $post->post_title,
             $posts[ 0 ]->post_title
         );
-
     }
 
     /**
@@ -137,7 +134,6 @@ final class PostTest extends TestCase
             $post->post_title,
             $posts[ 0 ]->post_title
         );
-
     }
 
     /**
@@ -165,36 +161,6 @@ final class PostTest extends TestCase
             Carbon::class,
             $post->post_modified
         );
-
-    }
-
-    /**
-     * @covers \UnderScorer\ORM\Models\Post
-     * @covers \UnderScorer\ORM\Models\Post::update
-     */
-    public function testIsUpdatingModifiedDateOnUpdate(): void
-    {
-
-        /**
-         * @var Post $post
-         */
-        $post = $this->postFactory->create();
-
-        $this->assertEquals(
-            $post->post_modified->toDateTimeString(),
-            Carbon::now()->toDateTimeString()
-        );
-
-        sleep( 1 );
-
-        $post->post_title = 'Updated!';
-        $post->update();
-
-        $this->assertEquals(
-            $post->post_modified->toDateTimeString(),
-            Carbon::now()->toDateTimeString()
-        );
-
     }
 
     /**
@@ -221,7 +187,6 @@ final class PostTest extends TestCase
             $author->ID,
             $user->ID
         );
-
     }
 
     /**
@@ -282,7 +247,7 @@ final class PostTest extends TestCase
             $this->assertEquals( 'Old title', $oldPost->post_title );
             $this->assertEquals( 'Old content', $oldPost->post_content );
 
-            $hooksCount++;
+            $hooksCount ++;
         }, 10, 3 );
 
 
@@ -290,7 +255,7 @@ final class PostTest extends TestCase
             $this->assertEquals( 'New title!', $post->post_title );
             $this->assertEquals( 'New content!', $post->post_content );
 
-            $hooksCount++;
+            $hooksCount ++;
         }, 10, 2 );
 
         add_action( 'save_post', function ( int $ID, WP_Post $post, $test = null ) use ( &$hooksCount ) {
@@ -311,6 +276,74 @@ final class PostTest extends TestCase
         $post->save();
 
         $this->assertEquals( 4, $hooksCount );
+    }
+
+    /**
+     * @covers Post::getAttribute()
+     */
+    public function testAliasesGetters(): void
+    {
+        /**
+         * @var Post $post
+         */
+        $post = $this->postFactory->create( [
+            'post_title'   => 'Aliased post',
+            'post_content' => 'Aliased content',
+        ] );
+
+        $this->assertEquals(
+            $post->post_content,
+            $post->content
+        );
+
+        $this->assertEquals(
+            $post->post_content,
+            $post->content
+        );
+    }
+
+    /**
+     * @covers Post::setAttribute()
+     */
+    public function testAliasesSetters(): void
+    {
+        $post          = new Post();
+        $post->title   = 'Aliased title';
+        $post->content = 'Aliased content';
+
+        $post->save();
+
+        $this->assertEquals(
+            'Aliased title',
+            $post->title
+        );
+
+        $this->assertEquals(
+            'Aliased content',
+            $post->content
+        );
+    }
+
+    /**
+     * @covers Post::current()
+     */
+    public function testCurrent(): void
+    {
+        // Ouch :/
+        global $post;
+
+        /**
+         * @var Post $postModel
+         */
+        $postModel = $this->postFactory->create();
+        $post      = $postModel->toWpPost();
+
+        $currentPost = Post::current();
+
+        $this->assertEquals(
+            $postModel->ID,
+            $currentPost->ID
+        );
     }
 
 }

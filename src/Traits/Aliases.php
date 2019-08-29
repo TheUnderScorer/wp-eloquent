@@ -43,9 +43,12 @@ trait Aliases
      */
     public function getAttribute( $key )
     {
+        $aliases = static::getAliases();
+
         $value = parent::getAttribute( $key );
-        if ( $value === null && count( static::getAliases() ) ) {
-            if ( $value = Arr::get( static::getAliases(), $key ) ) {
+
+        if ( $value === null && count( $aliases ) ) {
+            if ( $value = Arr::get( $aliases, $key ) ) {
                 if ( is_array( $value ) ) {
                     $meta = Arr::get( $value, 'meta' );
 
@@ -69,5 +72,35 @@ trait Aliases
         }
 
         return static::$aliases;
+    }
+
+    /**
+     * Sets model value basing on alias key
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return mixed
+     */
+    public function setAttribute( $key, $value )
+    {
+        $aliases    = static::getAliases();
+        $aliasedKey = Arr::get( $aliases, $key );
+
+        if ( is_array( $aliasedKey ) ) {
+
+            $metaKey = Arr::get( $aliasedKey, 'meta' );
+
+            if ( $metaKey ) {
+                $this->meta->$metaKey = $value;
+
+                return $this;
+            }
+        }
+
+        return parent::setAttribute(
+            $aliasedKey ? $aliasedKey : $key,
+            $value
+        );
     }
 }

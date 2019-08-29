@@ -10,7 +10,7 @@ $dir = __DIR__;
 
 require_once $dir . '/../../vendor/autoload.php';
 
-$testsDir = $dir . '/Suite/wordpress-tests-lib';
+$testsDir = __DIR__ . '/Suite/tests/phpunit';
 
 if ( ! file_exists( $testsDir ) ) {
     $dotenv = Dotenv::create( $dir );

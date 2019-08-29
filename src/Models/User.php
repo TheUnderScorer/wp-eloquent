@@ -5,29 +5,30 @@ namespace UnderScorer\ORM\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use UnderScorer\ORM\Eloquent\Model;
+use UnderScorer\ORM\Traits\Aliases;
 use WP_User;
 
 /**
  * Class User
  * @package UnderScorer\ORM\WP
  *
- * @property int    ID
- * @property string login
- * @property string user_pass
- * @property string slug
- * @property string user_email
- * @property string url
- * @property Carbon createdAt
- * @property string user_activation_key
- * @property string user_status
- * @property string first_name
- * @property string last_name
+ * @property int        ID
+ * @property string     login
+ * @property string     password
+ * @property string     slug
+ * @property string     email
+ * @property string     url
+ * @property Carbon     createdAt
+ * @property string     user_activation_key
+ * @property string     user_status
+ * @property string     firstName
+ * @property string     lastName
  * @property UserMeta[] meta
  */
 class User extends Model
 {
 
-    use WithMeta;
+    use WithMeta, Aliases;
 
     /**
      * @var string
@@ -38,6 +39,23 @@ class User extends Model
      * @var static
      */
     protected static $current;
+
+    /**
+     * @var array
+     */
+    protected static $aliases = [
+        'login'         => 'user_login',
+        'password'      => 'user_pass',
+        'email'         => 'user_email',
+        'firstName'     => [
+            'meta' => 'first_name',
+        ],
+        'lastName'      => [
+            'meta' => 'last_name',
+        ],
+        'url'           => 'user_url',
+        'user_nicename' => 'nicename',
+    ];
 
     /**
      * @var bool
@@ -72,21 +90,21 @@ class User extends Model
      * @var array
      */
     protected $appends = [
-        'first_name',
-        'last_name',
+        'firstName',
+        'lastName',
     ];
 
     /**
      * @var array
      */
     protected $fillable = [
-        'user_login',
-        'user_email',
-        'user_nicename',
-        'user_url',
-        'user_pass',
-        'first_name',
-        'last_name',
+        'login',
+        'email',
+        'nicename',
+        'url',
+        'password',
+        'firstName',
+        'lastName',
         'nickname',
     ];
 
@@ -170,38 +188,6 @@ class User extends Model
         $user->init( (object) $this->toArray(), get_current_blog_id() );
 
         return $user;
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getFirstNameAttribute()
-    {
-        return $this->getSingleMeta( 'first_name' );
-    }
-
-    /**
-     * @param $name
-     */
-    public function updateFirstNameAttribute( $name )
-    {
-        $this->updateMeta( 'first_name', $name );
-    }
-
-    /**
-     * @param $name
-     */
-    public function updateLastNameAttribute( $name )
-    {
-        $this->updateMeta( 'last_name', $name );
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getLastNameAttribute()
-    {
-        return $this->getSingleMeta( 'last_name' );
     }
 
 }

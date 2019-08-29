@@ -20,24 +20,22 @@ use WP_Post;
  * @package UnderScorer\ORM\WP
  *
  * @property int           ID
- * @property int           post_author
- * @property string        post_title
+ * @property int           authorID
  * @property string        title
- * @property string        post_content
  * @property string        content
- * @property string        post_excerpt
- * @property string        comment_status
- * @property string        post_status
- * @property string        post_type
- * @property string        post_content_filtered
- * @property string        post_parent
+ * @property string        excerpt
+ * @property string        commentStatus
+ * @property string        status
+ * @property string        type
+ * @property string        contentFiltered
+ * @property string        parentID
  * @property string        guid
- * @property string        post_mime_type
- * @property string        comment_count
- * @property int           menu_order
- * @property Carbon        post_date
- * @property Carbon        post_date_gmt
- * @property Carbon        post_modified
+ * @property string        mimeType
+ * @property string        commentCount
+ * @property int           menuOrder
+ * @property Carbon        createdAt
+ * @property Carbon        postDateGmt
+ * @property Carbon        updatedAt
  * @property Carbon        post_modified_gmt
  * @property User          author
  * @property Comment[]     comments
@@ -51,49 +49,65 @@ class Post extends Model
     use WithMeta, Aliases;
 
     /**
+     *
+     */
+    const POST_TYPE = 'post';
+
+    /**
      * @var string
      */
     const CREATED_AT = 'post_date';
+
 
     /**
      * @var string
      */
     const UPDATED_AT = 'post_modified';
+
     /**
      * @var array
      */
     protected static $aliases = [
-        'title'      => 'post_title',
-        'content'    => 'post_content',
-        'excerpt'    => 'post_excerpt',
-        'slug'       => 'post_name',
-        'type'       => 'post_type',
-        'mime_type'  => 'post_mime_type',
-        'url'        => 'guid',
-        'author_id'  => 'post_author',
-        'parent_id'  => 'post_parent',
-        'created_at' => 'post_date',
-        'updated_at' => 'post_modified',
-        'status'     => 'post_status',
+        'title'           => 'post_title',
+        'content'         => 'post_content',
+        'contentFiltered' => 'post_content_filtered',
+        'excerpt'         => 'post_excerpt',
+        'slug'            => 'post_name',
+        'type'            => 'post_type',
+        'mimeType'        => 'post_mime_type',
+        'url'             => 'guid',
+        'authorID'        => 'post_author',
+        'parentID'        => 'post_parent',
+        'createdAt'       => 'post_date',
+        'updatedAt'       => 'post_modified',
+        'status'          => 'post_status',
+        'commentStatus'   => 'comment_status',
+        'commentCount'    => 'comment_count',
+        'postDateGmt'     => 'post_date_gmt',
     ];
+
     /**
      * @var string
      */
     protected $primaryKey = 'ID';
+
     /**
      * @var string
      */
     protected $metaRelation = PostMeta::class;
+
     /**
      * @var string
      */
     protected $metaForeignKey = 'post_id';
+
     /**
      * @var array
      */
     protected $attributes = [
         'post_type' => 'post',
     ];
+
     /**
      * @var array
      */
@@ -103,10 +117,13 @@ class Post extends Model
         'post_modified',
         'post_modified_gmt',
     ];
+
     /**
      * @var string
      */
     protected $postType = 'post';
+
+
     /**
      * @var array
      */
@@ -326,8 +343,8 @@ class Post extends Model
     {
         $builder = new PostBuilder( $query );
 
-        if ( $this->postType ) {
-            return $builder->where( 'post_type', '=', $this->postType );
+        if ( static::POST_TYPE ) {
+            return $builder->where( 'post_type', '=', static::POST_TYPE );
         }
 
         return $builder;
@@ -338,8 +355,8 @@ class Post extends Model
      */
     public function newQuery()
     {
-        return $this->postType ?
-            parent::newQuery()->where( 'post_type', '=', $this->postType ) :
+        return static::POST_TYPE ?
+            parent::newQuery()->where( 'post_type', '=', static::POST_TYPE ) :
             parent::newQuery();
     }
 
@@ -349,6 +366,23 @@ class Post extends Model
     public function getTable()
     {
         return $this->getConnection()->db->posts;
+    }
+
+    /**
+     * Returns currently queried post
+     *
+     * @return static|null
+     */
+    public static function current()
+    {
+        $ID = get_the_ID();
+
+        /**
+         * @var static $model
+         */
+        $model = static::query()->find( $ID );
+
+        return $ID ? $model : null;
     }
 
     /**
