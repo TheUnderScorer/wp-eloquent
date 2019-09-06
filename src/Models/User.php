@@ -36,11 +36,6 @@ class User extends Model
     const CREATED_AT = 'user_registered';
 
     /**
-     * @var static
-     */
-    protected static $current;
-
-    /**
      * @var array
      */
     protected static $aliases = [
@@ -139,16 +134,14 @@ class User extends Model
      */
     public static function current()
     {
-        if ( empty( self::$current ) ) {
-            $userID = get_current_user_id();
+        $userID = get_current_user_id();
 
-            /**
-             * @var static $user
-             */
-            self::$current = static::query()->find( $userID );
-        }
+        /**
+         * @var static $user
+         */
+        $user = static::query()->find( $userID );
 
-        return self::$current;
+        return $user;
     }
 
     /**
