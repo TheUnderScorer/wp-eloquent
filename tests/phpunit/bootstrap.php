@@ -2,8 +2,6 @@
 
 namespace WPK\Tests;
 
-use Dotenv\Dotenv;
-
 define( 'TESTS_DIR', __DIR__ );
 
 $dir = __DIR__;
@@ -13,17 +11,9 @@ require_once $dir . '/../../vendor/autoload.php';
 $testsDir = __DIR__ . '/Suite/tests/phpunit';
 
 if ( ! file_exists( $testsDir ) ) {
-    $dotenv = Dotenv::create( $dir );
-    $dotenv->load();
+    printf( 'Error! You need to provide tests suite in %s.', __DIR__ . '/Suite' );
 
-    $testsDir = getenv( 'WP_TESTS_DIR' );
-
-    if ( ! $testsDir ) {
-        echo 'Error! You need to either setup tests suite using docker-compose or provide path to your own tests suite in WP_TESTS_DIR env variable.';
-
-        return;
-    }
-
+    return 1;
 }
 
 // Disable revisions
