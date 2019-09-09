@@ -37,7 +37,7 @@ final class PostTest extends TestCase
             ],
         ] );
 
-        $categories = $post->taxonomy( 'category' );
+        $categories = $post->taxonomy( [ 'category' ] );
 
         // First index, since zero index equals "Uncategorized"
         $this->assertEquals( 'Test category', $categories[ 1 ]->term->name );

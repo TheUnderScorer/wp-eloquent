@@ -3,6 +3,7 @@
 namespace UnderScorer\ORM\Models;
 
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -185,13 +186,23 @@ class Post extends Model
     }
 
     /**
-     * @param string $taxonomy
+     * @param string[]     $taxonomies
+     * @param Closure|null $queryCallback
      *
      * @return TermTaxonomy[] | Collection
      */
-    public function taxonomy( string $taxonomy )
+    public function taxonomy( array $taxonomies, ?Closure $queryCallback = null )
     {
-        return $this->taxonomies()->where( 'taxonomy', '=', $taxonomy )->get();
+        $query = $this
+            ->taxonomies()
+            ->whereIn( 'taxonomy', $taxonomies )
+            ->orderBy( 'taxonomy' );
+
+        if ( $queryCallback ) {
+            $queryCallback( $query );
+        }
+
+        return $query->get();
     }
 
     /**
