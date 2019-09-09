@@ -1,0 +1,42 @@
+# Do not give sudo access
+sudo: false
+
+# Use the PHP environment
+language: php
+php:
+  - '7.3'
+
+services:
+  - docker
+  - mysql
+
+# Don't send notifications via email, that's annoying
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+
+branches:
+  only:
+    - master
+    - dev
+
+# Cache composer dependencies
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+# Setup environment
+before_script:
+  # Export composer
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  # Install plugin with composer
+  - composer install --no-progress
+  - docker-compose --version
+  - composer -V
+  - mysql -e 'CREATE DATABASE wordpress_test'
+  - mysql -u root -e "create user user identified by 'pass'; grant all on wordpress_test.* to user;"
+
+script:
+  - vendor/bin/phpunit
