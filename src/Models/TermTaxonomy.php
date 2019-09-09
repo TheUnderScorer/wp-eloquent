@@ -19,6 +19,7 @@ use UnderScorer\ORM\Eloquent\Model;
  * @property int          count
  * @property Term         term
  * @property TermTaxonomy parentTaxonomy
+ * @property Post[]       posts
  */
 class TermTaxonomy extends Model
 {
