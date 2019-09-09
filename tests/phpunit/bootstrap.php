@@ -2,18 +2,18 @@
 
 namespace WPK\Tests;
 
+use RuntimeException;
+
 define( 'TESTS_DIR', __DIR__ );
 
 $dir = __DIR__;
 
 require_once $dir . '/../../vendor/autoload.php';
 
-$testsDir = __DIR__ . '/Suite/tests/phpunit';
+$testsDir = __DIR__ . '/WPSuite/tests/phpunit';
 
 if ( ! file_exists( $testsDir ) ) {
-    printf( 'Error! You need to provide tests suite in %s.', __DIR__ . '/Suite' );
-
-    return 1;
+    throw new RuntimeException( sprintf( 'Error! You need to provide tests suite in %s.', __DIR__ . '/WPSuite' ) );
 }
 
 // Disable revisions
