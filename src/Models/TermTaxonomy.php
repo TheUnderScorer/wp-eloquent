@@ -2,6 +2,7 @@
 
 namespace UnderScorer\ORM\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use UnderScorer\ORM\Eloquent\Model;
@@ -10,13 +11,14 @@ use UnderScorer\ORM\Eloquent\Model;
  * Class TermTaxonomy
  * @package WPK\Core\Models\WP
  *
- * @property int    term_taxonomy_id
- * @property int    term_id
- * @property string taxonomy
- * @property string description
- * @property int    parent
- * @property int    count
- * @property Term   term
+ * @property int          term_taxonomy_id
+ * @property int          term_id
+ * @property string       taxonomy
+ * @property string       description
+ * @property int          parent
+ * @property int          count
+ * @property Term         term
+ * @property TermTaxonomy parentTaxonomy
  */
 class TermTaxonomy extends Model
 {
@@ -51,6 +53,14 @@ class TermTaxonomy extends Model
         $pivotTable = $this->getConnection()->db->prefix . 'term_relationships';
 
         return $this->belongsToMany( Post::class, $pivotTable, 'term_taxonomy_id', 'object_id' );
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function parentTaxonomy()
+    {
+        return $this->belongsTo( static::class, 'parent' );
     }
 
     /**
