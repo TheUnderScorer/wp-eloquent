@@ -14,6 +14,7 @@ use UnderScorer\ORM\Eloquent\Model;
  * @property string       slug
  * @property int          term_group
  * @property TermTaxonomy taxonomy
+ * @property TermMeta[]    meta
  */
 class Term extends Model
 {

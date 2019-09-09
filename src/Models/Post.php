@@ -119,12 +119,6 @@ class Post extends Model
     ];
 
     /**
-     * @var string
-     */
-    protected $postType = 'post';
-
-
-    /**
      * @var array
      */
     protected $fillable = [
