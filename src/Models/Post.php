@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use UnderScorer\ORM\Builders\PostBuilder;
 use UnderScorer\ORM\Eloquent\Model;
 use UnderScorer\ORM\Traits\Aliases;
@@ -41,7 +42,9 @@ use WP_Post;
  * @property User          author
  * @property Comment[]     comments
  * @property PostMeta[]    meta
+ * @property Post          parent
  * @property ThumbnailMeta thumbnail
+ * @property Post[]        children
  * @property Attachment    attachment
  */
 class Post extends Model
@@ -228,7 +231,7 @@ class Post extends Model
         foreach ( $terms as $term ) {
 
             $name = $term[ 'name' ];
-            $slug = $term[ 'slug' ];
+            $slug = $term[ 'slug' ] ?? Str::slug( $term[ 'name' ] );
 
             /**
              * @var Term $term

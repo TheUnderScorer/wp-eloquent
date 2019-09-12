@@ -24,6 +24,9 @@ use WP_User;
  * @property string     firstName
  * @property string     lastName
  * @property UserMeta[] meta
+ * @property Post[]     posts
+ * @property Comment[]  comments
+ *
  */
 class User extends Model
 {
