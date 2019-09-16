@@ -55,7 +55,7 @@ class Post extends Model
     /**
      * @var string
      */
-    const POST_TYPE = 'post';
+    const POST_TYPE = '';
 
     /**
      * @var string
