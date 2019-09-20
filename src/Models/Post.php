@@ -371,7 +371,7 @@ class Post extends Model
     /**
      * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->getConnection()->db->posts;
     }

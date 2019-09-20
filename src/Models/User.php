@@ -186,4 +186,12 @@ class User extends Model
         return $user;
     }
 
+    /**
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return $this->getConnection()->db->users;
+    }
+
 }
