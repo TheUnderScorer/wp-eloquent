@@ -90,6 +90,7 @@ class User extends Model
     protected $appends = [
         'firstName',
         'lastName',
+        'roles',
     ];
 
     /**
@@ -112,6 +113,27 @@ class User extends Model
     public function setUserPassAttribute( $pass ): void
     {
         $this->attributes[ 'user_pass' ] = wp_hash_password( $pass );
+    }
+
+    /**
+     * @return array
+     */
+    public function getRolesAttribute(): array
+    {
+        $wpUser = $this->toWpUser();
+
+        return $wpUser->roles;
+    }
+
+    /**
+     * @return WP_User
+     */
+    public function toWpUser()
+    {
+        $user = new WP_User();
+        $user->init( (object) $this->toArray(), get_current_blog_id() );
+
+        return $user;
     }
 
     /**
@@ -173,17 +195,6 @@ class User extends Model
         }
 
         return $result;
-    }
-
-    /**
-     * @return WP_User
-     */
-    public function toWpUser()
-    {
-        $user = new WP_User();
-        $user->init( (object) $this->toArray(), get_current_blog_id() );
-
-        return $user;
     }
 
     /**
