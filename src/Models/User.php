@@ -23,6 +23,7 @@ use WP_User;
  * @property string     user_status
  * @property string     firstName
  * @property string     lastName
+ * @property string[]   roles
  * @property UserMeta[] meta
  * @property Post[]     posts
  * @property Comment[]  comments
