@@ -24,6 +24,7 @@ use WP_User;
  * @property string     firstName
  * @property string     lastName
  * @property string[]   roles
+ * @property string[]   capabilities
  * @property UserMeta[] meta
  * @property Post[]     posts
  * @property Comment[]  comments
@@ -119,7 +120,7 @@ class User extends Model
     /**
      * @return array
      */
-    public function getRolesAttribute(): array
+    public function getRolesAttribute()
     {
         $wpUser = $this->toWpUser();
 
@@ -131,10 +132,26 @@ class User extends Model
      */
     public function toWpUser()
     {
+        // Remove appends to avoid infinite nesting
+        $appends       = $this->appends;
+        $this->appends = [];
+
         $user = new WP_User();
         $user->init( (object) $this->toArray(), get_current_blog_id() );
 
+        $this->appends = $appends;
+
         return $user;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCapabilitiesAttribute()
+    {
+        $wpUser = $this->toWpUser();
+
+        return $wpUser->caps;
     }
 
     /**
