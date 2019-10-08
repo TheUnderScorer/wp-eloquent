@@ -90,4 +90,30 @@ final class WithMetaTest extends TestCase
         $this->assertCount( 1, $metas );
     }
 
+
+    /**
+     * @covers WithMeta::scopeMetaValueEquals
+     */
+    public function testScopeMetaValueEquals(): void
+    {
+        $post = $this->post;
+        $post->addMeta( 'test', 'test1' );
+
+        $foundPost = Post::query()->metaValueEquals( 'test', 'test1' )->first();
+
+        $this->assertTrue( $post->is( $foundPost ) );
+    }
+
+    /**
+     * @covers WithMeta::scopeMetaValue
+     */
+    public function testScopeMetaValue(): void
+    {
+        $post = $this->post;
+        $post->addMeta( 'test', 25 );
+
+        $foundPost = Post::query()->metaValue( 'test', '>=', 25 )->first();
+
+        $this->assertTrue( $post->is( $foundPost ) );
+    }
 }

@@ -4,6 +4,8 @@ namespace UnderScorer\ORM\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
+use UnderScorer\ORM\Builders\UserBuilder;
 use UnderScorer\ORM\Eloquent\Model;
 use UnderScorer\ORM\Traits\Aliases;
 use WP_User;
@@ -188,6 +190,21 @@ class User extends Model
     }
 
     /**
+     * This method acts as pure annotation for IDEs
+     *
+     * @return UserBuilder
+     */
+    public static function query()
+    {
+        /**
+         * @var UserBuilder $query
+         */
+        $query = parent::query();
+
+        return $query;
+    }
+
+    /**
      * @param array $options
      *
      * @return bool
@@ -221,6 +238,18 @@ class User extends Model
     public function getTable(): string
     {
         return $this->getConnection()->db->users;
+    }
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param Builder $query
+     *
+     * @return UserBuilder
+     */
+    public function newEloquentBuilder( $query )
+    {
+        return new UserBuilder( $query );
     }
 
 }

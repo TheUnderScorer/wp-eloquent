@@ -2,6 +2,7 @@
 
 namespace UnderScorer\ORM\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use UnderScorer\ORM\Contracts\MetaInterface;
@@ -110,6 +111,37 @@ trait WithMeta
     }
 
     /**
+     * @param Builder $query
+     * @param string  $metaKey
+     * @param string  $value
+     *
+     * @return Builder
+     */
+    public function scopeMetaValueEquals( Builder $query, string $metaKey, string $value )
+    {
+        return $this->scopeMetaValue( $query, $metaKey, '=', $value );
+    }
+
+    /**
+     * @param Builder $query
+     * @param string  $metaKey
+     * @param string  $compare
+     * @param string  $value
+     *
+     * @return Builder
+     */
+    public function scopeMetaValue( Builder $query, string $metaKey, string $compare, string $value )
+    {
+        return $query->whereHas( 'meta', function ( Builder $query ) use ( $metaKey, $value, $compare ) {
+            $query
+                ->where( [
+                    [ 'meta_key', '=', $metaKey ],
+                    [ 'meta_value', $compare, $value ],
+                ] );
+        } );
+    }
+
+    /**
      * @param string $metaKey
      * @param null   $value
      *
@@ -117,10 +149,10 @@ trait WithMeta
      */
     public function deleteMeta( string $metaKey, $value = null )
     {
-        $query = $this->meta()->where('meta_key', '=', $metaKey);
+        $query = $this->meta()->where( 'meta_key', '=', $metaKey );
 
-        if(!is_null($value)){
-            $query->where('meta_value', '=', $value);
+        if ( ! is_null( $value ) ) {
+            $query->where( 'meta_value', '=', $value );
         }
 
         return $query->delete();
