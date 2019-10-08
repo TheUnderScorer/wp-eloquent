@@ -67,7 +67,7 @@ trait Aliases
      */
     public static function getAliases()
     {
-        return array_merge( self:: $aliases, static::$aliases, );
+        return array_merge( self:: $aliases, static::$aliases );
     }
 
     /**
@@ -88,7 +88,7 @@ trait Aliases
             $metaKey = Arr::get( $aliasedKey, 'meta' );
 
             if ( $metaKey ) {
-                $this->meta->$metaKey = $value;
+                $this->updateMeta( $metaKey, $value );
 
                 return $this;
             }
